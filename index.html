@@ -12,32 +12,195 @@
 	<meta name="mobile-web-app-capable" content="yes">
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="apple-mobile-web-app-status-bar-style" content="default">
-	<meta name="apple-mobile-web-app-title" content="Gomocalc">
+	<meta name="apple-mobile-web-app-title" content="AI Caro">
 	<meta name="description" content="A powerful and easy-to-use online Gomoku/Renju AI">
 	<link rel="shortcut icon" sizes="192x192" href="/gomocalcoffline/icon.png">
 	<link rel="apple-touch-icon" href="/gomocalcoffline/icon.png">
 	<link rel="icon" href="/gomocalcoffline/favicon.ico">
-	<title>Gomoku Calculator</title>
+	<title>AI Caro</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="/gomocalcoffline/lib/css/font-awesome.css" crossorigin="anonymous">
 	<link href="/gomocalcoffline/js/about.dc8c625a.js" rel="prefetch">
 	<link href="/gomocalcoffline/js/app.59050e49.js" rel="preload" as="script">
 	<link href="/gomocalcoffline/js/chunk-vendors.cb794552.js" rel="preload" as="script">
 	<link href="/gomocalcoffline/js/serviceWorker.js" rel="preload" as="script">
 	<script src="/gomocalcoffline/js/serviceWorker.js"></script>
+
+	<style>
+		body, input, button, select, textarea, p, div, h1, h2, h3, h4, h5, h6, td, th, label {
+			font-family: 'Be Vietnam Pro', -apple-system, sans-serif !important;
+		}
+		.fa, [class^="fa-"], [class*=" fa-"] {
+			font-family: 'FontAwesome' !important;
+		}
+
+		body, #app {
+			background-color: #eef2f7 !important;
+		}
+
+		.vux-header {
+			background: linear-gradient(135deg, #3a1f0a 0%, #5c3215 100%) !important;
+		}
+		.vux-header .vux-header-title {
+			color: #f0c040 !important;
+			text-shadow: 0 0 16px rgba(240,192,64,0.3) !important;
+		}
+		.fa-list {
+			color: #f0c040 !important;
+		}
+
+		.weui-tabbar__item:nth-child(3) {
+			display: none !important;
+		}
+
+		.button-box {
+			overflow-x: auto !important;
+			-webkit-overflow-scrolling: touch !important;
+		}
+		.button-box > .weui-flex,
+		.button-box > div {
+			display: flex !important;
+			flex-wrap: nowrap !important;
+			min-width: max-content !important;
+		}
+	</style>
 </head>
 
-<body><noscript><strong>We're sorry but Gomoku Calculator doesn't work properly without JavaScript enabled. Please enable it to continue.</strong></noscript>
+<body>
+	<noscript><strong>We're sorry but AI Caro doesn't work properly without JavaScript enabled. Please enable it to continue.</strong></noscript>
 	<div id="app"></div>
 	<script async src="/gomocalcoffline/lib/gif.js"></script>
 	<script>
 		window.dataLayer = window.dataLayer || []
-
-		function gtag() {
-			dataLayer.push(arguments)
-		}
+		function gtag() { dataLayer.push(arguments) }
 		gtag('js', new Date())
 		gtag('config', 'UA-143073882-1')
 	</script>
+
+	<script>
+	(function() {
+		var NEW_LANGS = [
+			{ key: 'en', value: 'English' },
+			{ key: 'vi', value: 'Tiếng Việt' }
+		];
+
+		var VI = {
+			appName: "AI Caro",
+			common: { confirm: "Xác nhận", cancel: "Hủy" },
+			tabbar: { game: "Bàn cờ", settings: "Cài đặt", about: "Giới thiệu" },
+			game: {
+				"new": "Mới", balance1: "Cân bằng 1 bước", balance2: "Cân bằng 2 bước",
+				setIndexOrigin: "Đánh dấu đây", resetIndexOrigin: "Đặt lại số thứ tự",
+				flip: "Lật", move: "Di chuyển",
+				info: { depth: "Độ sâu", eval: "Đánh giá", speed: "Tốc độ", nodes: "Nút", bestline: "Nước tốt nhất", nbestIndex: "STT" },
+				interruptThinking: { title: "AI đang suy nghĩ", msg: "Dừng suy nghĩ ngay?" },
+				swap: { title: "ĐỔI MÀU", msg: "AI đã chọn đổi màu.", questionTitle: "ĐỔI MÀU?", questionMsg: "Bạn có muốn đổi màu không?" },
+				forbid: { title: "Nước cấm", msg: "Nước đi này bị cấm." },
+				shotJpg: "Chụp ảnh JPG", shotGif: "Chụp ảnh GIF",
+				gifDelay: "Nhập độ trễ (ms) mỗi khung", gifStart: "Nhập số thứ tự bắt đầu",
+				gifLoading: "Đang tạo GIF...", saveScreenshot: "Lưu ảnh vào thiết bị",
+				saveScreenshotIOS: "Nhấn giữ để lưu ảnh", currentPos: "Vị trí",
+				evalChart: "Biểu đồ đánh giá", black: "ĐEN", white: "TRẮNG"
+			},
+			setting: {
+				language: "Ngôn ngữ",
+				thinking: {
+					timeTitle: "Thời gian suy nghĩ", turnTime: "Thời gian/lượt (s)",
+					matchTime: "Thời gian ván (s)", maxDepth: "Độ sâu tối đa", maxNode: "Nút tối đa (M)",
+					fast: "Nhanh (~3 phút/ván)", slow: "Chậm (~15 phút/ván)",
+					analysis: "Phân tích (không giới hạn)", custom: "Tùy chỉnh",
+					handicap: "Giới hạn sức mạnh", nbest: "Đa phân tích (PV)",
+					thinkTitle: "Đang suy nghĩ", threads: "Số luồng", pondering: "Suy nghĩ nền",
+					hashSize: "Kích thước bảng tra",
+					config: {
+						"210901": "Mô hình cũ (2021/09/01)",
+						"220723": "Mô hình mới (2022/07/23)",
+						title: "Mô hình engine", classic: "Cổ điển"
+					},
+					candrange: {
+						title: "Phạm vi ứng cử viên",
+						square2: "Ô 2", square2line3: "Ô 2 + Hàng 3", square3: "Ô 3",
+						square3line4: "Ô 3 + Hàng 4 (Đề xuất)", square4: "Ô 4", fullboard: "Toàn bàn"
+					}
+				},
+				board: {
+					title: "Bàn cờ", size: "Kích thước bàn",
+					rule: { title: "Luật chơi", gomoku: "Gomoku", standard: "Chuẩn", renju: "Renju", swap1: "Gomoku - HOÁN ĐỔI 1" },
+					aiThinkBlack: "AI đánh quân đen", aiThinkWhite: "AI đánh quân trắng",
+					clickCheck: { title: "Cách đặt quân", direct: "Đặt trực tiếp", confirm: "Xác nhận lần 2", slide: "Trượt để đặt" },
+					showTitle: "Hiển thị bàn cờ", showCoord: "Hiện tọa độ", showAnalysis: "Hiện phân tích",
+					showDetail: "Hiện chi tiết suy nghĩ", showIndex: "Hiện số thứ tự",
+					showLastStep: "Làm nổi bật nước cuối", showWinline: "Hiện đường thắng", showForbid: "Hiện nước cấm",
+					showPvEval: { title: "Hiện đánh giá PV", none: "Tắt", eval: "Đánh giá", winrate: "Tỉ lệ thắng" },
+					colorTitle: "Màu sắc", boardColor: "Màu bàn cờ", lastStepColor: "Màu nước cuối",
+					winlineColor: "Màu đường thắng", bestMoveColor: "Phân tích - Nước tốt nhất",
+					thinkingMoveColor: "Phân tích - Đang tìm", thoughtMoveColor: "Phân tích - Đã tìm",
+					lostMoveColor: "Phân tích - Nước thua"
+				},
+				reset: "Đặt lại tất cả cài đặt"
+			}
+		};
+
+		function patchComponent(c) {
+			var opts = c.$options && c.$options.computed;
+			if (!opts || !opts.languageOptions) return;
+			opts.languageOptions = function() { return NEW_LANGS; };
+			var w = c._computedWatchers && c._computedWatchers.languageOptions;
+			if (w) {
+				w.getter = function() { return NEW_LANGS; };
+				w.value  = NEW_LANGS;
+				w.dirty  = false;
+			}
+			try { c.$forceUpdate(); } catch(e) {}
+		}
+
+		function collectAll(root, arr) {
+			arr = arr || [];
+			arr.push(root);
+			(root.$children || []).forEach(function(c) { collectAll(c, arr); });
+			return arr;
+		}
+
+		function patchTitle() {
+			var el = document.querySelector('.vux-header-title');
+			if (el && el.textContent.trim() !== 'AI Caro') {
+				el.textContent = 'AI Caro';
+			}
+		}
+
+		function patch() {
+			var appEl = document.getElementById('app');
+			var vm = appEl && appEl.__vue__;
+			if (!vm) return false;
+			if (vm.$i18n && vm.$i18n.setLocaleMessage)
+				vm.$i18n.setLocaleMessage('vi', VI);
+			collectAll(vm).forEach(patchComponent);
+			patchTitle();
+			return true;
+		}
+
+		var timer = setInterval(function() {
+			if (patch()) {
+				clearInterval(timer);
+				// Dùng MutationObserver để re-patch mỗi khi Vue render lại DOM
+				var observer = new MutationObserver(function() {
+					patch();
+				});
+				observer.observe(document.getElementById('app'), {
+					childList: true,
+					subtree: true
+				});
+			}
+		}, 200);
+
+		window.addEventListener('hashchange', function() {
+			setTimeout(patch, 300);
+		});
+	})();
+	</script>
+
 	<script src="/gomocalcoffline/js/chunk-vendors.cb794552.js"></script>
 	<script src="/gomocalcoffline/js/app.59050e49.js"></script>
 </body>
